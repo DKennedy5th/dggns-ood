@@ -8,8 +8,6 @@ class gameScreen(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent=parent)
         drag={}
-        #drawnCard,baseFirst,baseSecond,baseThird,baseFourth,tempFirst,tempSecond,tempThird,tempFourth=Class_Card_Stack.cardStack()
-        #acceptors=[drawnCard,baseFirst,baseSecond,baseThird,baseFourth,tempFirst,tempSecond,tempThird,tempFourth]
 
         deck = Class_Deck.deck()
         deck.createDeck()
@@ -235,10 +233,10 @@ class gameScreen(wx.Panel):
         baseSecond.Bind(wx.EVT_MOTION, mouseMovement)
         baseThird.Bind(wx.EVT_MOTION, mouseMovement)
         baseFourth.Bind(wx.EVT_MOTION, mouseMovement)
-        baseFirst.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFirst,event,1))
-        baseSecond.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseSecond,event,2))
-        baseThird.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseThird,event,3))
-        baseFourth.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFourth,event,4))
+        baseFirst.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFirst,event)) #(baseFirst,event,0)
+        baseSecond.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseSecond,event)) #(baseFirst,event,1)
+        baseThird.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseThird,event)) #(baseFirst,event,2)
+        baseFourth.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFourth,event)) #(baseFirst,event,3)
 
         tempFirst.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempFirst,event=event))
         tempSecond.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempSecond,event=event))
