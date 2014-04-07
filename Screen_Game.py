@@ -193,6 +193,9 @@ class gameScreen(wx.Panel):
         baseFourth.stack=Class_Card_Stack.cardStack()
         setBase(3,baseFourth)
 
+        shuffleButton=wx.Button(self,label="Shuffle Cards",pos=(10,125),size=(75,30))
+        shuffleButton.Bind(wx.EVT_BUTTON, lambda event: parent.setState(2))
+
         tempFirst = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,100),(200,130),(75,100))
         tempFirst.stack=Class_Card_Stack.cardStack()
         tempFirst.SetBitmap(setCard(tempFirst))
@@ -229,6 +232,11 @@ class gameScreen(wx.Panel):
         deckImage.Bind(wx.EVT_LEFT_DOWN, lambda event: moveCard(deck,drawnCard))
         drawnCard.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(drawnCard,event=event))
 
+        
+        baseFirst.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempFirst,event=event)) #
+        baseSecond.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempSecond,event=event)) #
+        baseThird.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempThird,event=event)) #
+        baseFourth.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempFourth,event=event)) #
         baseFirst.Bind(wx.EVT_MOTION, mouseMovement)
         baseSecond.Bind(wx.EVT_MOTION, mouseMovement)
         baseThird.Bind(wx.EVT_MOTION, mouseMovement)

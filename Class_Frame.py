@@ -54,8 +54,6 @@ class frame(wx.Frame):
 
         self.timer = wx.FutureCall(20,navigate)
 
-
-
     def setState(self,i):
         self.state=i
 
