@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>3ca0203b-5557-4c2c-b3cd-9a8952bd1f12</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>Calculation_Solitaire.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>Calculation Solitaire</Name>
+    <RootNamespace>CS Python</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Calculation_Solitaire.py" />
+    <Compile Include="Class_Card_Stack.py" />
+    <Compile Include="Screen_Victory.py" />
+    <Compile Include="Class_Card.py" />
+    <Compile Include="Class_Deck.py" />
+    <Compile Include="Class_Frame.py" />
+    <Compile Include="Screen_Game.py" />
+    <Compile Include="Class_Image.py" />
+    <Compile Include="Helper_Globals.py" />
+    <Compile Include="Screen_Defeat.py" />
+    <Compile Include="Screen_Welcome.py" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>
