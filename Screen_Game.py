@@ -1,4 +1,5 @@
 import wx
+import Class_Card
 import Class_Deck
 import Class_Card_Stack
 import Image
@@ -49,11 +50,15 @@ class gameScreen(wx.Panel):
                     try:
                         obj=event.GetEventObject()
                         if(not number):
-                            moveCard(drag['drop'],obj)
+                            if((drag['drop']==tempFirst and (obj==tempSecond or obj==tempThird or obj==tempFourth)) or (drag['drop']==tempSecond and (obj==tempFirst or obj==tempThird or obj==tempFourth)) or (drag['drop']==tempThird and (obj==tempSecond or obj==tempFirst or obj==tempFourth)) or (drag['drop']==tempFourth and (obj==tempSecond or obj==tempThird or obj==tempFirst))):
+                                print "exception"
+                            else:
+                                moveCard(drag['drop'],obj)
                         else:
                             try:
                                 if ((obj.stack.peekCard().rank+number)%13==drag['drop'].stack.peekCard().rank):
                                     moveCard(drag['drop'],obj)
+
                             except:
                                 pass
                     except:
@@ -67,18 +72,27 @@ class gameScreen(wx.Panel):
                 del drag['drop']
 
         def moveCard(cardFrom,cardTo):
-            tempCard=cardFrom.stack.returnTopCard()
-            if(tempCard):
-                cardTo.stack.addCard(tempCard)
-            try:
-                cardTo.SetBitmap(setCard(cardTo))
-            except:
-                pass
-            try:
-                cardFrom.SetBitmap(setCard(cardFrom,cardTo))
-            except:
-                pass
-            testGameOver()
+            if(cardTo!=drawnCard or drawnCard.stack.peekCard()==None):
+                tempCard=cardFrom.stack.returnTopCard()
+                if(tempCard):
+                    cardTo.stack.addCard(tempCard)
+                try:
+                    cardTo.SetBitmap(setCard(cardTo))
+                except:
+                    pass
+                try:
+                    cardFrom.SetBitmap(setCard(cardFrom,cardTo))
+                except:
+                    pass
+                testGameOver()
+                if(cardTo==baseFirst):
+                    labelFirst.SetLabel("Next: "+Class_Card.rankToString((baseFirst.stack.peekCard().rank+1)%13))
+                if(cardTo==baseSecond):
+                    labelSecond.SetLabel("Next: "+Class_Card.rankToString((baseSecond.stack.peekCard().rank+2)%13))
+                if(cardTo==baseThird):
+                    labelThird.SetLabel("Next: "+Class_Card.rankToString((baseThird.stack.peekCard().rank+3)%13))
+                if(cardTo==baseFourth):
+                    labelFourth.SetLabel("Next: "+Class_Card.rankToString((baseFourth.stack.peekCard().rank+4)%13))
 
         def testGameOver():
             if(deck.stack.peekCard()==None and drawnCard.stack.peekCard()==None):
@@ -138,14 +152,14 @@ class gameScreen(wx.Panel):
 
                     for x in xrange(0,stackSize):
                         stack.stack.cycleCard()
-                        tempImage = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,100),(200+90*stack.stack.column,130+25*x),(75,100))
+                        tempImage = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,100),(200+90*stack.stack.column,150+25*x),(75,100))
                         tempCardImage = wx.Image(stack.stack.peekCard().returnImg(), wx.BITMAP_TYPE_ANY).Scale(75,100,wx.IMAGE_QUALITY_NEAREST)
                         tempCardImage=tempCardImage.ConvertToBitmap()
                         tempImage.SetBitmap(tempCardImage)
                         stack.stack.bitmapList.append(tempImage)
                         tempImage.Bind(wx.EVT_LEFT_UP, leftMouseClickUp)
                         tempImage.Bind(wx.EVT_MOTION, mouseMovement)
-                        toStack.SetPosition(wx.Point(200+90*stack.stack.column,130+25*x))
+                        toStack.SetPosition(wx.Point(200+90*stack.stack.column,150+25*x))
                         self.Refresh()
 
             except:
@@ -167,6 +181,24 @@ class gameScreen(wx.Panel):
 
         self.SetBackgroundColour((12, 94, 1))
 
+        
+        labelFirst=wx.StaticText(self, label="placeholder", pos=(220,115), size=(40,20))
+        labelFirst.SetForegroundColour((255,255,255))
+        baseFirst = wx.StaticBitmap(self,0,wx.EmptyBitmap(75,100),(200,10),(75,100))
+        labelSecond=wx.StaticText(self, label="placeholder", pos=(310,115), size=(40,20))
+        labelSecond.SetForegroundColour((255,255,255))
+        baseSecond = wx.StaticBitmap(self,1,wx.EmptyBitmap(75,100),(290,10),(75,100))
+        labelThird=wx.StaticText(self, label="placeholder", pos=(400,115), size=(40,20))
+        labelThird.SetForegroundColour((255,255,255))
+        baseThird = wx.StaticBitmap(self,2,wx.EmptyBitmap(75,100),(380,10),(75,100))
+        labelFourth=wx.StaticText(self, label="placeholder", pos=(490,115), size=(40,20))
+        labelFourth.SetForegroundColour((255,255,255))
+        baseFourth = wx.StaticBitmap(self,3,wx.EmptyBitmap(75,100),(470,10),(75,100))
+        tempFirst = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,100),(200,150),(75,100))
+        tempSecond = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,300),(290,150),(75,100))
+        tempThird = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,300),(380,150),(75,100))
+        tempFourth = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,300),(470,150),(75,100))
+
         drawnCard = wx.StaticBitmap(self,4,wx.EmptyBitmap(75,100),(100,10),(75,100))
         drawnCard.stack=Class_Card_Stack.cardStack()
         moveCard(deck,drawnCard)
@@ -177,54 +209,45 @@ class gameScreen(wx.Panel):
         deckImage.SetBitmap(tempDeckImage)
         deckImage.stack=Class_Card_Stack.cardStack()
 
-        baseFirst = wx.StaticBitmap(self,0,wx.EmptyBitmap(75,100),(200,10),(75,100))
         baseFirst.stack=Class_Card_Stack.cardStack()
         setBase(0,baseFirst)
 
-        baseSecond = wx.StaticBitmap(self,1,wx.EmptyBitmap(75,100),(290,10),(75,100))
         baseSecond.stack=Class_Card_Stack.cardStack()
         setBase(1,baseSecond)
 
-        baseThird = wx.StaticBitmap(self,2,wx.EmptyBitmap(75,100),(380,10),(75,100))
         baseThird.stack=Class_Card_Stack.cardStack()
         setBase(2,baseThird)
 
-        baseFourth = wx.StaticBitmap(self,3,wx.EmptyBitmap(75,100),(470,10),(75,100))
         baseFourth.stack=Class_Card_Stack.cardStack()
         setBase(3,baseFourth)
 
-        shuffleButton=wx.Button(self,label="Shuffle Cards",pos=(10,125),size=(75,30))
-        shuffleButton.Bind(wx.EVT_BUTTON, lambda event: parent.setState(2))
-
-        tempFirst = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,100),(200,130),(75,100))
         tempFirst.stack=Class_Card_Stack.cardStack()
         tempFirst.SetBitmap(setCard(tempFirst))
         tempFirst.stack.stack=tempFirst.stack
         tempFirst.stack.cascade=True
         tempFirst.stack.column=0
 
-        tempSecond = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,300),(290,130),(75,100))
         tempSecond.stack=Class_Card_Stack.cardStack()
         tempSecond.SetBitmap(setCard(tempSecond))
         tempSecond.stack.stack=tempSecond.stack
         tempSecond.stack.cascade=True
         tempSecond.stack.column=1
+        
 
-        tempThird = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,300),(380,130),(75,100))
         tempThird.stack=Class_Card_Stack.cardStack()
         tempThird.SetBitmap(setCard(tempThird))
         tempThird.stack.stack=tempThird.stack
         tempThird.stack.cascade=True
         tempThird.stack.column=2
+        
 
-        tempFourth = wx.StaticBitmap(self,-1,wx.EmptyBitmap(75,300),(470,130),(75,100))
         tempFourth.stack=Class_Card_Stack.cardStack()
         tempFourth.SetBitmap(setCard(tempFourth))
         tempFourth.stack.stack=tempFourth.stack
         tempFourth.stack.cascade=True
         tempFourth.stack.column=3
 
-        
+
         deckImage.Bind(wx.EVT_LEFT_UP, leftMouseClickUp)
         drawnCard.Bind(wx.EVT_LEFT_UP, leftMouseClickUp)
         deckImage.Bind(wx.EVT_MOTION, mouseMovement)
@@ -233,18 +256,14 @@ class gameScreen(wx.Panel):
         drawnCard.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(drawnCard,event=event))
 
         
-        baseFirst.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempFirst,event=event)) #
-        baseSecond.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempSecond,event=event)) #
-        baseThird.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempThird,event=event)) #
-        baseFourth.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempFourth,event=event)) #
         baseFirst.Bind(wx.EVT_MOTION, mouseMovement)
         baseSecond.Bind(wx.EVT_MOTION, mouseMovement)
         baseThird.Bind(wx.EVT_MOTION, mouseMovement)
         baseFourth.Bind(wx.EVT_MOTION, mouseMovement)
-        baseFirst.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFirst,event)) #(baseFirst,event,0)
-        baseSecond.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseSecond,event)) #(baseFirst,event,1)
-        baseThird.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseThird,event)) #(baseFirst,event,2)
-        baseFourth.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFourth,event)) #(baseFirst,event,3)
+        baseFirst.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFirst,event,1))
+        baseSecond.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseSecond,event,2))
+        baseThird.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseThird,event,3))
+        baseFourth.Bind(wx.EVT_LEFT_UP, lambda event: leftMouseClickUp(baseFourth,event,4))
 
         tempFirst.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempFirst,event=event))
         tempSecond.Bind(wx.EVT_LEFT_DOWN, lambda event: leftMouseClickDown(tempSecond,event=event))
